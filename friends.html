@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1, minimum-scale=1">
+    <title>Задания - Holiarus</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: #111;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            min-height: 100vh;
+            overflow: hidden; /* Это предотвращает появление прокрутки */
+            user-select: none; /* Запрет на выделение текста */
+            -webkit-user-select: none; /* Запрет на выделение текста в Safari */
+            -moz-user-select: none; /* Запрет на выделение текста в Firefox */
+            -ms-user-select: none; /* Запрет на выделение текста в Internet Explorer */
+        }
+        h2 {
+            margin-top: 20px;
+            color: #ff9800;
+        }
+        .task {
+            background-color: #333;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 10px;
+            width: 90%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .task button {
+            background-color: #ff9800;
+            border: none;
+            padding: 10px 20px;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .task button:hover {
+            background-color: #e68900;
+        }
+        /* Стиль для кнопок внизу */
+        .bottom-buttons {
+            position: absolute;
+            bottom: 20px;
+            display: flex;
+            gap: 20px;
+        }
+  /* Basic reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.footer {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #3a3a3a;
+    padding: 10px 0;
+    position: fixed;
+    bottom: 0;
+    width: 90%; /* Изменено на 90% для отступов по бокам */
+    border-radius: 15px; /* Закругление углов */
+    margin: 0 auto; /* Центрируем подвал */
+}
+
+.footer-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #b0b0b0; /* Gray text color */
+    font-size: 14px;
+}
+
+.footer-item img {
+    width: 24px;
+    height: 24px;
+    margin-bottom: 5px;
+}
+
+.footer-item span {
+    font-size: 12px;
+}
+.task button {
+    background-color: #ff9800;
+    border: none;
+    padding: 10px 20px;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s, transform 0.2s; /* Плавный переход для фона и трансформации */
+}
+/* Эффект при наведении */
+.task button:hover {
+    background-color: #e68900;
+    transform: scale(1.05); /* Увеличение кнопки на 5% при наведении */
+}
+
+/* Эффект при нажатии */
+.task button:active {
+    transform: scale(0.95); /* Уменьшение кнопки на 5% при нажатии */
+}
+#copyNotification {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 18px;
+    z-index: 1000;
+    display: none; /* Скрыт по умолчанию */
+}
+    </style>
+</head>
+<body>
+
+    <h2>Заработай больше кристаллов</h2>
+
+    <div id="copyNotification" style="display: none;">Ссылка скопирована!</div>
+
+    <div class="task">
+        <p>Присоединяйся к нашему Telegram каналу и получи +5 ключей</p>
+        <button id="telegramButton" onclick="openTelegram()">Подписаться</button>
+    </div>
+    
+    <div class="task">
+        <p>Пригласи друга и получи 500 кристаллов!</p>
+        <button onclick="copyInviteLink(false)">Пригласить</button>
+    </div>
+    
+    <div class="task">
+        <p>Друг с Telegram Premium? Получи 1500 кристаллов!</p>
+        <button onclick="copyInviteLink(true)">Пригласить</button>
+    </div>
+
+    <div class="footer">
+        <div class="footer-item" onclick="goToMenu()">
+            <img src="m.png" alt="Exchange">
+            <span>Menu</span>
+        </div>
+        <div class="footer-item" onclick="goToShop()">
+            <img src="t.png" alt="Mine">
+            <span>Shop</span>
+        </div>
+        <div class="footer-item" onclick="goToFriends()">
+            <img src="f.png" alt="Friends">
+            <span>Friends</span>
+        </div>
+    </div>
+    
+
+    <script>
+      if (performance.navigation.type === 1) {
+            window.location.href = 'index.html';
+        }
+        function copyInviteLink(friendPremium = false) {
+    const gameLink = "https://t.me/holiarus_bot";
+    
+    navigator.clipboard.writeText(`Присоединяйся к игре и получи бонусы! ${gameLink}`)
+        .then(() => {
+            showCopyNotification();
+            trackInvite(friendPremium);
+        })
+        .catch(err => {
+            console.error("Ошибка копирования ссылки: ", err);
+        });
+}
+
+function showCopyNotification() {
+    const notification = document.getElementById('copyNotification');
+    notification.style.display = 'block';
+    setTimeout(() => {
+        notification.style.display = 'none';
+    }, 2000); // Скрыть через 2 секунды
+}
+
+
+// Функция для отслеживания приглашений
+function trackInvite(friendPremium) {
+    const inviteType = friendPremium ? "premium" : "regular";
+    let inviteCount = localStorage.getItem(`invite_${inviteType}`) || 0;
+    inviteCount = parseInt(inviteCount) + 1;
+    localStorage.setItem(`invite_${inviteType}`, inviteCount);
+}
+
+        // Проверяем состояние задач при загрузке страницы
+        window.addEventListener('DOMContentLoaded', function() {
+            updateTaskStates();
+            updateCrystalDisplay();
+            checkSubscriptionStatus(); // Проверка состояния подписки при загрузке
+        });
+
+        // Функция для проверки состояния подписки
+        function checkSubscriptionStatus() {
+            const isSubscribed = localStorage.getItem('isSubscribed') === 'true';
+            if (isSubscribed) {
+                updateButtonToComplete("telegramButton");
+            }
+        }
+
+        // Функция для проверки подписки и обновления кнопки
+        function checkSubscription(buttonId) {
+            simulateSubscriptionCheck().then(isSubscribed => {
+                if (isSubscribed) {
+                    localStorage.setItem('isSubscribed', 'true'); // Сохраняем состояние подписки
+                    awardKeys(); // Начисляем 5 ключей
+                    updateButtonToComplete(buttonId); // Изменяем кнопку на "Выполнено"
+                } else {
+                    alert("Пожалуйста, подпишитесь на канал, чтобы получить награду.");
+                }
+            }).catch(error => {
+                console.error("Ошибка проверки подписки:", error);
+            });
+        }
+
+        // Функция симуляции проверки подписки (замените на реальный запрос)
+        function simulateSubscriptionCheck() {
+            return new Promise(resolve => {
+                // Имитация асинхронного запроса
+                setTimeout(() => {
+                    const isSubscribed = Math.random() > 0.5; // Случайное условие подписки
+                    resolve(isSubscribed); // Верните true если подписан, иначе false
+                }, 1000);
+            });
+        }
+
+        function awardCrystals(friendPremium = false) {
+            const crystals = friendPremium ? 1500 : 500;
+            let totalCrystals = localStorage.getItem('totalCrystals') || 0;
+            totalCrystals = parseInt(totalCrystals) + crystals;
+            localStorage.setItem('totalCrystals', totalCrystals);
+            document.getElementById('totalCrystals').textContent = totalCrystals;
+        }
+
+        function onFriendJoins(isNew = true, friendPremium = false) {
+            if (isNew) {
+                awardCrystals(friendPremium);
+            }
+        }
+
+        function awardKeys() {
+            let totalKeys = localStorage.getItem('totalKeys') || 0;
+            totalKeys = parseInt(totalKeys) + 5;
+            localStorage.setItem('totalKeys', totalKeys);
+            alert("Вы получили 5 ключей!");
+        }
+
+        function updateButtonToComplete(buttonId) {
+            const button = document.getElementById(buttonId);
+            button.textContent = "Выполнено";
+            button.disabled = true;
+        }
+
+        function openTelegram() {
+            window.open("https://t.me/holiarus", "_blank");
+            checkSubscription("telegramButton");
+        }
+
+        function goToMenu() {
+            window.location.href = "menu.html"; // Страница для меню
+        }
+
+        function goToShop() {
+            window.location.href = "shop.html"; // Страница для магазина
+        }
+
+        function goToFriends() {
+            window.location.href = "friends.html"; // Страница для друзей
+        }
+        window.addEventListener('DOMContentLoaded', function() {
+            let totalCrystals = localStorage.getItem('totalCrystals') || 0;
+            document.getElementById('totalCrystals').textContent = totalCrystals;
+        });
+    </script>
+
+</body>
+</html>
